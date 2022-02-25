@@ -1,11 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-2
+  namespace: default
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    server: https://kubernetes.default.svc
-
+    namespace: default
+    server: {{ .Values.spec.destination.server }}
+  project: default
   source:
+    path: helm-guestbook
     repoURL: https://github.com/argoproj/argocd-example-apps
     targetRevision: HEAD
     helm:
+      releaseName: app-2
       parameters:
       - name: "nginx-ingress.controller.service.annotations.external-dns\\.alpha\\.kubernetes\\.io/hostname"
         value: mydomain.example.com
